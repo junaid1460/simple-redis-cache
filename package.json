@@ -1,6 +1,6 @@
 {
   "name": "@junaid1460/simple-redis-cache",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Cache function return value in redis",
   "main": "src/index.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "function-cache"
   ],
   "author": "Junaid",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/junaid1460/simple-redis-cache/issues"
   },
