@@ -1,4 +1,4 @@
-import { RedisClient, ClientOpts, createClient } from "redis";
+import { ClientOpts, createClient, RedisClient } from "redis";
 
 interface ICache {
     data: any;
@@ -16,10 +16,10 @@ interface ICachedFuncOutput<T> {
 }
 
 export class RedisCache {
-    
+
     public redisClient: RedisClient;
     constructor(options: ClientOpts) { 
-        this.redisClient = createClient(options)
+        this.redisClient = createClient(options);
     }
 
     public async cached<T>(args: ICachedFuncInput<T>): Promise<ICachedFuncOutput<T>> {

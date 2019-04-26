@@ -8,9 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const redis_1 = require("redis");
 class RedisCache {
-    constructor(redisClient) {
-        this.redisClient = redisClient;
+    constructor(options) {
+        this.redisClient = redis_1.createClient(options);
     }
     cached(args) {
         return __awaiter(this, void 0, void 0, function* () {
