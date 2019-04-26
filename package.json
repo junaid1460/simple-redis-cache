@@ -1,6 +1,6 @@
 {
   "name": "@junaid1460/simple-redis-cache",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Cache function return value in redis",
   "main": "src/index.js",
   "scripts": {
@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/junaid1460/simple-redis-cache#readme",
   "dependencies": {
+    "@types/redis": "^2.8.12",
     "redis": "^2.8.0"
   },
   "devDependencies": {}
