@@ -1,5 +1,5 @@
 {
-  "name": "@crook/simple-redis-cache",
+  "name": "@junaid1460/simple-redis-cache",
   "version": "1.0.0",
   "description": "Cache function return value in redis",
   "main": "src/index.js",
