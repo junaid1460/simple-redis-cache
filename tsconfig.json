@@ -5,7 +5,7 @@
         "noImplicitAny": false,
         "removeComments": true,
         "preserveConstEnums": true,
-        "sourceMap": true,
+        "sourceMap": false,
         "emitDecoratorMetadata": true,
         "strictNullChecks": true,
         "lib": [
@@ -16,7 +16,7 @@
             "esnext.asynciterable"
         ],
         "rootDir": ".",
-        "outDir": "build",
+
         "target": "es6"
     },
     "include": [
