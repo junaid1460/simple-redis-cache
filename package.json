@@ -1,5 +1,5 @@
 {
-  "name": "simple-redis-cache",
+  "name": "@crook/simple-redis-cache",
   "version": "1.0.0",
   "description": "Cache function return value in redis",
   "main": "src/index.js",
@@ -23,5 +23,6 @@
   "homepage": "https://github.com/junaid1460/simple-redis-cache#readme",
   "dependencies": {
     "redis": "^2.8.0"
-  }
+  },
+  "devDependencies": {}
 }
