@@ -15,29 +15,33 @@ interface ICachedFuncOutput<T> {
     data: T;
 }
 
-export class RedisCache {
-
-    public redisClient: RedisClient;
-    constructor(options: ClientOpts) { 
-        this.redisClient = createClient(options);
+class CacheItem<T> {
+    constructor(private redisClient: RedisClient, private args: ICachedFuncInput<T>) {
+        
     }
 
-    public async cached<T>(args: ICachedFuncInput<T>): Promise<ICachedFuncOutput<T>> {
-        const { expiresAfter, func, keys } = args;
-        const redisKey = keys.join(":");
+    private getKey() {
+        return this.args.keys.join(":")
+    }
+
+    async get(): Promise<T> {
+        const { expiresAfter, func } = this.args;
+        const redisKey = this.getKey()
         const cache = await this.redisGet(redisKey).catch((e) => undefined);
         if (cache !== undefined) {
-            return {
-                data: cache as T,
-                hit: true,
-            };
+            return cache as T
         }
         const data = await func();
         await this.redisSet(redisKey, data, expiresAfter);
-        return {
-            data: data,
-            hit: false,
-        };
+        return data
+    }
+
+    delete() {
+        return new Promise((resolve, reject) => {
+            this.redisClient.DEL(this.getKey(), (error, data) => {
+                resolve(data)
+            })
+        })
     }
 
     private redisGet(redisKey: string) {
@@ -62,5 +66,17 @@ export class RedisCache {
                 return resolve(true);
             });
         });
+    }
+}
+
+export class RedisCache {
+
+    public redisClient: RedisClient;
+    constructor(options: ClientOpts) { 
+        this.redisClient = createClient(options);
+    }
+
+    public async cached<T>(args: ICachedFuncInput<T>): Promise<CacheItem<T>> {
+        return new CacheItem(this.redisClient, args)
     }
 }
