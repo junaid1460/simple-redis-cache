@@ -76,7 +76,7 @@ export class RedisCache {
         this.redisClient = createClient(options);
     }
 
-    public async cached<T>(args: ICachedFuncInput<T>): Promise<CacheItem<T>> {
+    public cached<T>(args: ICachedFuncInput<T>): CacheItem<T> {
         return new CacheItem(this.redisClient, args)
     }
 }
