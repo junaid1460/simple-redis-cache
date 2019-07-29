@@ -29,7 +29,7 @@ function myFunc(x: number, y: number) {
     });
 }
 
-myFunc(1, 2).then((e) => console.log(e.hit, e.data));
+myFunc(1, 2).get().then((e) => console.log(e.hit, e.data));
 ```
 
 ##### Javascript:
@@ -52,5 +52,5 @@ function myFunc(x, y) {
     });
 }
 
-myFunc(1, 2).then((e) => console.log(e.hit, e.data));
+myFunc(1, 2).delete().then((e) => console.log());
 ```
