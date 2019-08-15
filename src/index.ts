@@ -16,15 +16,8 @@ interface ICachedFuncOutput<T> {
 }
 
 class CacheItem<T> {
-    constructor(private redisClient: RedisClient, private args: ICachedFuncInput<T>) {
-        
-    }
-
-    private getKey() {
-        return this.args.keys.join(":")
-    }
-
-    async get(): Promise<T> {
+    constructor(private redisClient: RedisClient, private args: ICachedFuncInput<T>) {}
+    public async get(): Promise<T> {
         const { expiresAfter, func } = this.args;
         const redisKey = this.getKey()
         const cache = await this.redisGet(redisKey).catch((e) => undefined);
@@ -33,15 +26,33 @@ class CacheItem<T> {
         }
         const data = await func();
         await this.redisSet(redisKey, data, expiresAfter);
-        return data
+        return data;
     }
 
-    delete() {
+    public async getWithStatus(): Promise<ICachedFuncOutput<T>> {
+        const { expiresAfter, func } = this.args;
+        const redisKey = this.getKey()
+        const cache = await this.redisGet(redisKey).catch((e) => undefined);
+        if (cache !== undefined) {
+            return {
+                data: cache as T,
+                hit: true,
+            };
+        }
+        const data = await func();
+        await this.redisSet(redisKey, data, expiresAfter);
+        return {
+            data: data,
+            hit: true,
+        };
+    }
+
+    public delete() {
         return new Promise((resolve, reject) => {
             this.redisClient.DEL(this.getKey(), (error, data) => {
-                resolve(data)
-            })
-        })
+                resolve(data);
+            });
+        });
     }
 
     private redisGet(redisKey: string) {
@@ -66,6 +77,10 @@ class CacheItem<T> {
                 return resolve(true);
             });
         });
+    }
+
+    private getKey() {
+        return this.args.keys.join(":")
     }
 }
 
