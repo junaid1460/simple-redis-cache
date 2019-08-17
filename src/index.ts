@@ -43,7 +43,7 @@ class CacheItem<T> {
         await this.redisSet(redisKey, data, expiresAfter);
         return {
             data: data,
-            hit: true,
+            hit: false,
         };
     }
 
