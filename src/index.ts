@@ -16,13 +16,16 @@ interface ICachedFuncOutput<T> {
 }
 
 class CacheItem<T> {
-    constructor(private redisClient: RedisClient, private args: ICachedFuncInput<T>) {}
+    constructor(
+        private redisClient: RedisClient,
+        private args: ICachedFuncInput<T>,
+    ) {}
     public async get(): Promise<T> {
         const { expiresAfter, func } = this.args;
-        const redisKey = this.getKey()
+        const redisKey = this.getKey();
         const cache = await this.redisGet(redisKey).catch((e) => undefined);
         if (cache !== undefined) {
-            return cache as T
+            return cache as T;
         }
         const data = await func();
         await this.redisSet(redisKey, data, expiresAfter);
@@ -31,7 +34,7 @@ class CacheItem<T> {
 
     public async getWithStatus(): Promise<ICachedFuncOutput<T>> {
         const { expiresAfter, func } = this.args;
-        const redisKey = this.getKey()
+        const redisKey = this.getKey();
         const cache = await this.redisGet(redisKey).catch((e) => undefined);
         if (cache !== undefined) {
             return {
@@ -71,27 +74,25 @@ class CacheItem<T> {
         return new Promise((resolve, __) => {
             const multiOperations = this.redisClient.multi();
             const cache = JSON.stringify({ data: data } as ICache);
-            multiOperations.set(redisKey, cache);
-            multiOperations.expire(redisKey, expiresAfter);
-            multiOperations.exec_atomic((error, _) => {
+            multiOperations.SETEX(redisKey, expiresAfter, cache);
+            multiOperations.exec((error, _) => {
                 return resolve(true);
             });
         });
     }
 
     private getKey() {
-        return this.args.keys.join(":")
+        return this.args.keys.join(":");
     }
 }
 
 export class RedisCache {
-
     public redisClient: RedisClient;
-    constructor(options: ClientOpts) { 
+    constructor(options: ClientOpts) {
         this.redisClient = createClient(options);
     }
 
     public cached<T>(args: ICachedFuncInput<T>): CacheItem<T> {
-        return new CacheItem(this.redisClient, args)
+        return new CacheItem(this.redisClient, args);
     }
 }
